@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import xml.etree.ElementTree as et
 import pandas as pd
+import sys
 
 sg.theme("green")
 sg.set_options(font = "Arial", element_text_color="white", text_color="white")
@@ -17,9 +18,9 @@ MainWindow = sg.Window("XML Invoice to Excel",mainlayout)
 
 while True:
     event, values = MainWindow.read()
-    if event in (sg.WIN_CLOSED, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Quit'):
         MainWindow.close()
-        quit()
+        sys.exit()
 
     elif event == '-RUN-' and values['-XML_PATH-'] == "" or values['-XLSX_PATH-'] == "":
         sg.popup("Զգուշացում", "Խնդրում եմ լրացրեք բոլոր դաշտերը")
