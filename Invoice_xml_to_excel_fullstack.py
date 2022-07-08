@@ -74,7 +74,7 @@ while True:
                 for elm in root.findall(".//{http://www.taxservice.am/tp3/invoice/definitions}SupplyDate"):
                     delivery_date.append(elm.text)
 
-            for elm in root.findall(".//{http://www.taxservice.am/tp3/invoice/definitions}SupplierInfo"):
+            for elm in root.findall(".//{http://www.taxservice.am/tp3/invoice/definitions}BuyerInfo"):
                 elm = elm.find(".//{http://www.taxservice.am/tp3/invoice/definitions}TIN")
                 tax_code.append(elm.text)
 
