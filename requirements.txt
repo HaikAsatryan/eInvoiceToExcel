@@ -1,4 +1,4 @@
 PySimpleGUI
-psgcompiler
+auto-py-to-exe
 pandas
 openpyxl
