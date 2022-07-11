@@ -2,3 +2,4 @@ PySimpleGUI
 auto-py-to-exe
 pandas
 openpyxl
+pyodbc

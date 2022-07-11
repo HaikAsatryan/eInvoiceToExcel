@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import xml.etree.ElementTree as et
 import pandas as pd
 import sys
+from db_connect import df_access
 
 sg.theme("green")
 sg.set_options(font="Arial", element_text_color="white", text_color="white")
@@ -123,12 +124,15 @@ while True:
                 'comment'
             ]]
 
+            df_join = pd.merge(df, df_access, on='tax_code', how='left')
+
             writer = pd.ExcelWriter(xlsx_path)
-            df.to_excel(writer)
+            df_join.to_excel(writer)
             writer.save()
+
             sg.popup("Կատարված է", "Invoice-ները բարեհաջող արտահանվել են")
             continue
         except Exception:
-            sg.popup("Անհաջող փորձ", "Invoice-ը չստացվեց արտահանել։ Invoice-ի ֆորմատը չի համապատասխանում ծրագրին։"
+            sg.popup("Անհաջող փորձ", "Invoice-ը չստացվեց արտահանել։ Ստուգեք արդյոք օգտագործում եք ճիշտ xml ֆայլ։"
                                      "Խնդրի պատճառը չհայտնաբերելու պարագայում դիմեք Հայկին:")
             continue
