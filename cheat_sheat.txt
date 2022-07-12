@@ -1,0 +1,4 @@
+1. for converting ui to code type "pyuic6 -x uifilepath -o newpyfilename" for instance
+    pyuic6 -x C:\Users\hayk.asatryan\Desktop\Haik\pythonprojects\eInvoiceToExcel\ui\MainWindow.ui -o qt_ui_converted.py
+
+2.
