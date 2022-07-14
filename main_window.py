@@ -1,8 +1,8 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QApplication, QDialog, \
-    QMainWindow, QPushButton
+from PyQt6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QApplication, QDialog, QMainWindow, QPushButton,QInputDialog
 from db_window import Ui_DBWindow
 from datetime import date
+from db_connect_back import backend
 
 
 class Ui_MainWindow(object):
@@ -22,19 +22,22 @@ class Ui_MainWindow(object):
         browse = QFileDialog.getExistingDirectory(None, 'Select Folder')
         self.xlsx_path.setText(browse)
 
-    def export(self):
-        if self.xml_path.text() == '' or self.xlsx_path.text() == '':
-            incorrect_path_msg = QMessageBox(self)
-            incorrect_path_msg.setWindowTitle('Զգուշացում')
-            incorrect_path_msg.setText('Խնդրում եմ լրացրեք բոլոր դաշտերը')
-            incorrect_path_msg.exec()
+    def undisable_button(self):
+        if len(self.xml_path.text())>0 and len(self.xlsx_path.text())>0:
+            self.export_button.setDisabled(False)
 
-            xlm_path = self.xml_path.text()
+
+    def export(self):
+            global xml_path, xlsx_path
+            xml_path = self.xml_path.text()
             xlsx_path = self.xlsx_path.text()
             if self.xlsx_name.text() != '':
-                xlsx_name = self.xlsx_name.text()
+                xlsx_path = f'{xlsx_path}/{self.xlsx_name.text()}.xlsx'
+                backend(self)
             else:
-                xlsx_name = f'Invoices_{date.today()}.xlsx'
+                xlsx_path = f'{xlsx_path}/Invoices_{date.today()}.xlsx'
+                backend(self)
+
 
     ############################################################################################################
     def setupUi(self, MainWindow):
@@ -79,6 +82,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.xml_path = QtWidgets.QLineEdit(self.verticalLayoutWidget)
+
+        self.xml_path.textChanged.connect(lambda: self.undisable_button()) # signal to function
+
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(15)
         sizePolicy.setVerticalStretch(0)
@@ -116,6 +122,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.xlsx_path = QtWidgets.QLineEdit(self.verticalLayoutWidget)
+
+        self.xlsx_path.textChanged.connect(lambda: self.undisable_button())  # signal to function
+
         self.xlsx_path.setEnabled(True)
         self.xlsx_path.setText("")
         self.xlsx_path.setObjectName("xlsx_path")
@@ -162,6 +171,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.export_button = QtWidgets.QPushButton(self.verticalLayoutWidget)
 
+        self.export_button.setDisabled(True)
         self.export_button.clicked.connect(lambda: self.export())  # signal to browse
 
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
