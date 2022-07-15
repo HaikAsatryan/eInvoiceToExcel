@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QApplication, QDialog, QMainWindow, QPushButton,QInputDialog
 from db_window import Ui_DBWindow
 from datetime import date
-from db_connect_back import backend
+from back_end import backend
 
 
 class Ui_MainWindow(object):
@@ -33,11 +33,10 @@ class Ui_MainWindow(object):
             xlsx_path = self.xlsx_path.text()
             if self.xlsx_name.text() != '':
                 xlsx_path = f'{xlsx_path}/{self.xlsx_name.text()}.xlsx'
-                backend(self)
             else:
                 xlsx_path = f'{xlsx_path}/Invoices_{date.today()}.xlsx'
-                backend(self)
 
+            backend(xlsx_path, xml_path)
 
     ############################################################################################################
     def setupUi(self, MainWindow):

@@ -2,7 +2,8 @@ import pandas as pd
 import pyodbc
 import xml.etree.ElementTree as et
 
-def backend(self):
+
+def backend(xlsx_path, xml_path):
     global df_access
     try:
         with open('db_path.txt', 'r') as f:
@@ -19,7 +20,7 @@ def backend(self):
 
         df_access = pd.DataFrame(rows, columns=['tax_code','mapping'])
     except:
-        pass
+        print(f'db_error')
     try:
         tree = et.parse(xml_path)
 
@@ -119,5 +120,5 @@ def backend(self):
         df_join.to_excel(writer)
         writer.save()
 
-    except Exception:
-        pass
+    except Exception as e:
+        print(e)
