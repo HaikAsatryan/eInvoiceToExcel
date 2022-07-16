@@ -7,9 +7,39 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 
 class Ui_DBWindow(object):
+
+##################################Functions for signals######################################
+
+    def db_browse(self):
+        browse = QFileDialog.getOpenFileName(caption="Open file", filter="Access Databases (*.mdb;*.mde;*.accdb;*.accde)")
+        self.db_path.setText(browse[0])
+
+    def undisable(self):
+        if len(self.db_path.text()) > 0:
+            self.db_apply_button.setDisabled(False)
+
+    def apply(self):
+        try:
+            with open('db_path.txt', 'w') as f:
+                f.write(self.db_path.text())
+                self.current_db_path.setText(self.db_path.text())
+
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("Բարեհաջող ավարտ")
+            msg_box.setText("Դուք բարեհաջող փոփոխեցիք տվյալների հենքի ուղին")
+            button = msg_box.exec()
+        except Exception as e:
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("Խնդիր")
+            msg_box.setText(e)
+            button = msg_box.exec()
+
+#############################################################################################
+
     def setupUi(self, DBWindow):
         DBWindow.setObjectName("DBWindow")
         DBWindow.setEnabled(True)
@@ -32,6 +62,11 @@ class Ui_DBWindow(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.current_db_path = QtWidgets.QTextEdit(self.centralwidget)
+
+        with open('db_path.txt', 'r') as f:
+            dbpath = f.read()
+        self.current_db_path.setText(dbpath) #show db path
+
         self.current_db_path.setEnabled(False)
         self.current_db_path.setGeometry(QtCore.QRect(110, 10, 341, 21))
         font = QtGui.QFont()
@@ -39,6 +74,9 @@ class Ui_DBWindow(object):
         self.current_db_path.setFont(font)
         self.current_db_path.setObjectName("current_db_path")
         self.db_path = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.db_path.textChanged.connect(lambda: self.undisable())
+
         self.db_path.setEnabled(True)
         self.db_path.setGeometry(QtCore.QRect(20, 50, 321, 20))
         font = QtGui.QFont()
@@ -46,12 +84,21 @@ class Ui_DBWindow(object):
         self.db_path.setFont(font)
         self.db_path.setObjectName("db_path")
         self.db_browse_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.db_browse_button.clicked.connect(lambda: self.db_browse())
+
         self.db_browse_button.setGeometry(QtCore.QRect(360, 50, 91, 21))
         self.db_browse_button.setObjectName("db_browse_button")
         self.db_apply_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.db_apply_button.setDisabled(True)
+        self.db_apply_button.clicked.connect(lambda: self.apply())
+
+
         self.db_apply_button.setGeometry(QtCore.QRect(110, 90, 91, 21))
         self.db_apply_button.setObjectName("db_apply_button")
         self.db_window_close_button = QtWidgets.QPushButton(self.centralwidget)
+        self.db_window_close_button.clicked.connect(lambda: DBWindow.close())
         self.db_window_close_button.setGeometry(QtCore.QRect(270, 90, 91, 21))
         self.db_window_close_button.setObjectName("db_window_close_button")
         DBWindow.setCentralWidget(self.centralwidget)
@@ -72,7 +119,7 @@ class Ui_DBWindow(object):
         self.label.setText(_translate("DBWindow", "Ներկա ուղի"))
         self.db_browse_button.setText(_translate("DBWindow", "Փնտրել"))
         self.db_apply_button.setText(_translate("DBWindow", "Փոփոխել"))
-        self.db_window_close_button.setText(_translate("DBWindow", "Դուրս գալ"))
+        self.db_window_close_button.setText(_translate("DBWindow", "Փակել"))
 
 
 if __name__ == "__main__":

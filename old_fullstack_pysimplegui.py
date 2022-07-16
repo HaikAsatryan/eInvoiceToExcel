@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import xml.etree.ElementTree as et
 import pandas as pd
 import sys
-from db_connect import df_access
+import pyodbc
 
 sg.theme("green")
 sg.set_options(font="Arial", element_text_color="white", text_color="white")
@@ -32,6 +32,17 @@ while True:
         xlsx_path = values['-XLSX_PATH-']
         xlsx_path = xlsx_path + '/invoices.xlsx'
         try:
+            con_string = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}; DBQ=\\EP-FS-001\FileSharing\FINANCE\Accounting workings\EP Accounting Invoices V1.0.accdb;'
+            conn = pyodbc.connect(con_string)
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM counterparties')
+
+            rows = []
+            for row in cursor.fetchall():
+                rows.append([row[0], row[3]])
+
+            df_access = pd.DataFrame(rows, columns=['tax_code', 'mapping'])
+
             tree = et.parse(xml_path)
 
             root = tree.getroot()

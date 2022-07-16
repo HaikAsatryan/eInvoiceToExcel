@@ -4,7 +4,7 @@ import xml.etree.ElementTree as et
 
 
 def backend(xlsx_path, xml_path):
-    global df_access
+    global xml_error, xlsx_error
     try:
         with open('db_path.txt', 'r') as f:
             dbpath = f.read()
@@ -19,8 +19,9 @@ def backend(xlsx_path, xml_path):
             rows.append([row[0], row[3]])
 
         df_access = pd.DataFrame(rows, columns=['tax_code','mapping'])
-    except:
-        print(f'db_error')
+    except Exception as db_error:
+        print(db_error)
+
     try:
         tree = et.parse(xml_path)
 
@@ -120,5 +121,5 @@ def backend(xlsx_path, xml_path):
         df_join.to_excel(writer)
         writer.save()
 
-    except Exception as e:
-        print(e)
+    except Exception as xml_error:
+        print(xml_error)

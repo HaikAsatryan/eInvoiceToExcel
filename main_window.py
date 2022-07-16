@@ -1,5 +1,5 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QFileDialog, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QApplication, QDialog, QMainWindow, QPushButton,QInputDialog
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from db_window import Ui_DBWindow
 from datetime import date
 from back_end import backend
@@ -28,7 +28,6 @@ class Ui_MainWindow(object):
 
 
     def export(self):
-            global xml_path, xlsx_path
             xml_path = self.xml_path.text()
             xlsx_path = self.xlsx_path.text()
             if self.xlsx_name.text() != '':
@@ -37,6 +36,11 @@ class Ui_MainWindow(object):
                 xlsx_path = f'{xlsx_path}/Invoices_{date.today()}.xlsx'
 
             backend(xlsx_path, xml_path)
+
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("Բարեհաջող ավարտ")
+            msg_box.setText("Դուք բարեհաջող արտահանեցիք excel ֆայլը։")
+            button = msg_box.exec()
 
     ############################################################################################################
     def setupUi(self, MainWindow):
